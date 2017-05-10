@@ -90,7 +90,7 @@ func PrintEach(s []byte)  {
 	}
 }
 
-// PrintAtRandom will print a single line byte array as string at random offsets.
+// PrintAtRandom will print each bytes in the []byte from random indexes.
 func PrintAtRandom(s []byte) {
 	perm := rand.Perm(len(s)+1)
 	for _, shuffledIndex := range perm {
