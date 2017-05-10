@@ -48,5 +48,3 @@ func main() {
 }
 
 ```
-
-Refer `fancyprint_test.go` for usage references.
