@@ -10,7 +10,7 @@ A fancyprint library
 ##### Use:
 
 * All functions accept type `[]byte`. Cast the string to `[]byte()` before passing it to the function.
-* Works only on terminals supporting `ansi escape sequences`.
+* Works only on terminals supporting [`Ansi Escape Sequences.`](https://en.wikipedia.org/wiki/ANSI_escape_code "Ansi Escape Codes - Wikipedia")
 * Works for single line texts only. Multi-line texts are not supported.
 
 Eg. code that prints similar to the gif above:
