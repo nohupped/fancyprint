@@ -5,7 +5,7 @@ import (
 	"time"
 	"math/rand"
 )
-var spinnerRotation int = 5
+var spinnerRotation = 5
 
 // SetSpinnerRotation will set how many times the spinner has to rotate when
 // the function is called each time.
@@ -13,7 +13,7 @@ func SetSpinnerRotation(i int) {
 	spinnerRotation = i
 }
 
-var spinnerRotationDelay time.Duration = time.Millisecond * 100
+var spinnerRotationDelay = time.Millisecond * 100
 
 // SetSpinnerRotationDelay will set the delay between each spinner movement in MilliSeconds.
 // Default value, if not manually set would be 100 MilliSeconds.
@@ -21,13 +21,17 @@ func SetSpinnerRotationDelay(i int) {
 	spinnerRotationDelay = time.Duration(i) * time.Millisecond
 }
 
-var jumpdelay time.Duration = time.Millisecond * 10
+var jumpdelay = time.Millisecond * 10
 
 // SetJumpDelay will set how long in MilliSeconds the cursor has to stay in the current position
 // before jumping to the next position. Default value if not manually set would be 10 MilliSeconds.
 func SetJumpDelay(i int) {
 	jumpdelay = time.Millisecond * time.Duration(i)
 }
+
+// ClearMask is used to decide if the printed mask used in PrintAndEraseWithSpinner should be cleared.
+var ClearMask = false
+
 
 // PrintAndEraseWithSpinner will print the series of byte array as strings, wait for "showTextFor"
 // number of seconds and starts erasing the text backwards with a spinner, masks it
@@ -54,8 +58,9 @@ func PrintAndEraseWithSpinner(s []byte, showTextFor int, endwithmask string) {
 		//time.Sleep(time.Millisecond * 1)
 		time.Sleep(jumpdelay)
 	}
-
-	fmt.Printf("%c[2K", 27);
+	if ClearMask == true {
+		fmt.Printf("%c[2K", 27);
+	}
 	fmt.Printf("\n")
 
 
@@ -85,12 +90,13 @@ func EraseFromCurrentCursorPositionWithSpinner(offset int) {
 func PrintEach(s []byte)  {
 	for _, i := range s {
 		PrintSpinnerOnOffset(1, string(i))
-		fmt.Printf("\033[%dC%s", -1, " ")
+		fmt.Printf("\033[%dC%s", 0, "")
 		time.Sleep(jumpdelay)
 	}
+	fmt.Printf("\n")
 }
 
-// PrintAtRandom will print each bytes in the []byte from random indexes.
+// PrintAtRandom will print a single line byte array as string at random offsets.
 func PrintAtRandom(s []byte) {
 	perm := rand.Perm(len(s)+1)
 	for _, shuffledIndex := range perm {
@@ -99,16 +105,19 @@ func PrintAtRandom(s []byte) {
 			fmt.Printf(string(s[shuffledIndex - 1]))
 			fmt.Printf("\033[%dD", shuffledIndex)
 			time.Sleep(jumpdelay)
-		} else if shuffledIndex == 1 {
-			fmt.Printf("\033[%dC", shuffledIndex - 2)
-			fmt.Printf(string(s[shuffledIndex - 1]))
-			fmt.Printf("\033[%dD", shuffledIndex)
-			time.Sleep(jumpdelay)
 		}
-
 	}
-
+	fmt.Printf("\033[%dD", len(s))
+	fmt.Printf(string(s[0]))
+		// } else if shuffledIndex == 1 {
+		// 	fmt.Printf("\033[%dC", shuffledIndex - 1)
+		// 	fmt.Printf(string(s[shuffledIndex ]))
+		// 	fmt.Printf("\033[%dD", shuffledIndex)
+		// 	time.Sleep(jumpdelay)
+		// }
+	fmt.Printf("\n")
 }
+
 
 // PrintSpinnerOnOffset will print a spinner character and jumps to the mentioned position offset.
 func PrintSpinnerOnOffset(pos int, endmask string) {
